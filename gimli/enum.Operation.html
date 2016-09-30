@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Operation` enum in crate `gimli`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Operation">
+
+    <title>gimli::Operation - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>gimli</a></p><script>window.sidebarCurrent = {name: 'Operation', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content enum">
+<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>gimli</a>::<wbr><a class='enum' href=''>Operation</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-6091' class='srclink' href='../src/gimli/src/op.rs.html#63-202' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum Operation&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span> {
+    Deref {
+        size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>,
+        space: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
+    },
+    Drop,
+    Pick {
+        index: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>,
+    },
+    Swap,
+    Rot,
+    Abs,
+    And,
+    Div,
+    Minus,
+    Mod,
+    Mul,
+    Neg,
+    Not,
+    Or,
+    Plus,
+    PlusConstant {
+        value: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+    },
+    Shl,
+    Shr,
+    Shra,
+    Xor,
+    Bra {
+        target: <a class='struct' href='../gimli/struct.EndianBuf.html' title='gimli::EndianBuf'>EndianBuf</a>&lt;'input,&nbsp;Endian&gt;,
+    },
+    Eq,
+    Ge,
+    Gt,
+    Le,
+    Lt,
+    Ne,
+    Skip {
+        target: <a class='struct' href='../gimli/struct.EndianBuf.html' title='gimli::EndianBuf'>EndianBuf</a>&lt;'input,&nbsp;Endian&gt;,
+    },
+    Literal {
+        value: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+    },
+    Register {
+        register: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+    },
+    RegisterOffset {
+        register: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+        offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a>,
+    },
+    FrameOffset {
+        offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a>,
+    },
+    Nop,
+    PushObjectAddress,
+    Call {
+        offset: <a class='enum' href='../gimli/enum.DieReference.html' title='gimli::DieReference'>DieReference</a>,
+    },
+    TLS,
+    CallFrameCFA,
+    Piece {
+        size_in_bits: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
+        bit_offset: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt;,
+    },
+    ImplicitValue {
+        data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'input [</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>,
+    },
+    StackValue,
+}</pre><div class='docblock'><p>A single decoded DWARF expression operation.</p>
+
+<p>DWARF expression evaluation is done in two parts: first the raw
+bytes of the next part of the expression are decoded; and then the
+decoded operation is evaluated.  This approach lets other
+consumers inspect the DWARF expression without reimplementing the
+decoding operation.</p>
+
+<p>Multiple DWARF opcodes may decode into a single <code>Operation</code>.  For
+example, both <code>DW_OP_deref</code> and <code>DW_OP_xderef</code> are represented
+using <code>Operation::Deref</code>.</p>
+</div><h2 class='variants'>Variants</h2>
+<span id='variant.Deref' class='variant'><code>Deref</code></span><div class='docblock'><p>A dereference operation.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.Deref.field.size'><code>size:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></td><td><div class='docblock'><p>The size of the data to dereference.</p>
+</div></td></tr><tr><td id='variant.Deref.field.space'><code>space:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></td><td><div class='docblock'><p>True if the dereference operation takes an address space
+argument; false otherwise.</p>
+</div></td></tr></table><span id='variant.Drop' class='variant'><code>Drop</code></span><div class='docblock'><p>Drop an item from the stack.</p>
+</div><span id='variant.Pick' class='variant'><code>Pick</code></span><div class='docblock'><p>Pick an item from the stack and push it on top of the stack.
+This operation handles <code>DW_OP_pick</code>, <code>DW_OP_dup</code>, and
+<code>DW_OP_over</code>.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.Pick.field.index'><code>index:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></td><td><div class='docblock'><p>The index, from the top of the stack, of the item to copy.</p>
+</div></td></tr></table><span id='variant.Swap' class='variant'><code>Swap</code></span><div class='docblock'><p>Swap the top two stack items.</p>
+</div><span id='variant.Rot' class='variant'><code>Rot</code></span><div class='docblock'><p>Rotate the top three stack items.</p>
+</div><span id='variant.Abs' class='variant'><code>Abs</code></span><div class='docblock'><p>Take the absolute value of the top of the stack.</p>
+</div><span id='variant.And' class='variant'><code>And</code></span><div class='docblock'><p>Bitwise <code>and</code> of the top two values on the stack.</p>
+</div><span id='variant.Div' class='variant'><code>Div</code></span><div class='docblock'><p>Divide the top two values on the stack.</p>
+</div><span id='variant.Minus' class='variant'><code>Minus</code></span><div class='docblock'><p>Subtract the top two values on the stack.</p>
+</div><span id='variant.Mod' class='variant'><code>Mod</code></span><div class='docblock'><p>Modulus of the top two values on the stack.</p>
+</div><span id='variant.Mul' class='variant'><code>Mul</code></span><div class='docblock'><p>Multiply the top two values on the stack.</p>
+</div><span id='variant.Neg' class='variant'><code>Neg</code></span><div class='docblock'><p>Negate the top of the stack.</p>
+</div><span id='variant.Not' class='variant'><code>Not</code></span><div class='docblock'><p>Bitwise <code>not</code> of the top of the stack.</p>
+</div><span id='variant.Or' class='variant'><code>Or</code></span><div class='docblock'><p>Bitwise <code>or</code> of the top two values on the stack.</p>
+</div><span id='variant.Plus' class='variant'><code>Plus</code></span><div class='docblock'><p>Add the top two values on the stack.</p>
+</div><span id='variant.PlusConstant' class='variant'><code>PlusConstant</code></span><div class='docblock'><p>Add a constant to the topmost value on the stack.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.PlusConstant.field.value'><code>value:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></td><td><div class='docblock'><p>The value to add.</p>
+</div></td></tr></table><span id='variant.Shl' class='variant'><code>Shl</code></span><div class='docblock'><p>Logical left shift of the 2nd value on the stack by the number
+of bits given by the topmost value on the stack.</p>
+</div><span id='variant.Shr' class='variant'><code>Shr</code></span><div class='docblock'><p>Right shift of the 2nd value on the stack by the number of
+bits given by the topmost value on the stack.</p>
+</div><span id='variant.Shra' class='variant'><code>Shra</code></span><div class='docblock'><p>Arithmetic left shift of the 2nd value on the stack by the
+number of bits given by the topmost value on the stack.</p>
+</div><span id='variant.Xor' class='variant'><code>Xor</code></span><div class='docblock'><p>Bitwise <code>xor</code> of the top two values on the stack.</p>
+</div><span id='variant.Bra' class='variant'><code>Bra</code></span><div class='docblock'><p>Branch to the target location if the top of stack is nonzero.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.Bra.field.target'><code>target:&nbsp;<a class='struct' href='../gimli/struct.EndianBuf.html' title='gimli::EndianBuf'>EndianBuf</a>&lt;'input,&nbsp;Endian&gt;</code></td><td><div class='docblock'><p>The target bytecode.</p>
+</div></td></tr></table><span id='variant.Eq' class='variant'><code>Eq</code></span><div class='docblock'><p>Compare the top two stack values for equality.</p>
+</div><span id='variant.Ge' class='variant'><code>Ge</code></span><div class='docblock'><p>Compare the top two stack values using <code>&gt;=</code>.</p>
+</div><span id='variant.Gt' class='variant'><code>Gt</code></span><div class='docblock'><p>Compare the top two stack values using <code>&gt;</code>.</p>
+</div><span id='variant.Le' class='variant'><code>Le</code></span><div class='docblock'><p>Compare the top two stack values using <code>&lt;=</code>.</p>
+</div><span id='variant.Lt' class='variant'><code>Lt</code></span><div class='docblock'><p>Compare the top two stack values using <code>&lt;</code>.</p>
+</div><span id='variant.Ne' class='variant'><code>Ne</code></span><div class='docblock'><p>Compare the top two stack values using <code>!=</code>.</p>
+</div><span id='variant.Skip' class='variant'><code>Skip</code></span><div class='docblock'><p>Unconditional branch to the target location.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.Skip.field.target'><code>target:&nbsp;<a class='struct' href='../gimli/struct.EndianBuf.html' title='gimli::EndianBuf'>EndianBuf</a>&lt;'input,&nbsp;Endian&gt;</code></td><td><div class='docblock'><p>The target bytecode.</p>
+</div></td></tr></table><span id='variant.Literal' class='variant'><code>Literal</code></span><div class='docblock'><p>Push a constant value on the stack.  This handles multiple
+DWARF opcodes, including <code>DW_OP_addr</code>.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.Literal.field.value'><code>value:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></td><td><div class='docblock'><p>The value to push.</p>
+</div></td></tr></table><span id='variant.Register' class='variant'><code>Register</code></span><div class='docblock'><p>Indicate that this piece&#39;s location is in the given register.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.Register.field.register'><code>register:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></td><td><div class='docblock'><p>The register number.</p>
+</div></td></tr></table><span id='variant.RegisterOffset' class='variant'><code>RegisterOffset</code></span><div class='docblock'><p>Find the value of the given register, add the offset, and then
+push the resulting sum on the stack.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.RegisterOffset.field.register'><code>register:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></td><td><div class='docblock'><p>The register number.</p>
+</div></td></tr><tr><td id='variant.RegisterOffset.field.offset'><code>offset:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a></code></td><td><div class='docblock'><p>The offset to add.</p>
+</div></td></tr></table><span id='variant.FrameOffset' class='variant'><code>FrameOffset</code></span><div class='docblock'><p>Compute the frame base (using <code>DW_AT_frame_base</code>), add the
+given offset, and then push the resulting sum on the stack.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.FrameOffset.field.offset'><code>offset:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i64.html'>i64</a></code></td><td><div class='docblock'><p>The offset to add.</p>
+</div></td></tr></table><span id='variant.Nop' class='variant'><code>Nop</code></span><div class='docblock'><p>No operation.</p>
+</div><span id='variant.PushObjectAddress' class='variant'><code>PushObjectAddress</code></span><div class='docblock'><p>Push the object address on the stack.</p>
+</div><span id='variant.Call' class='variant'><code>Call</code></span><div class='docblock'><p>Evaluate a DWARF expression as a subroutine.  The expression
+comes from the <code>DW_AT_location</code> attribute of the indicated
+DIE.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.Call.field.offset'><code>offset:&nbsp;<a class='enum' href='../gimli/enum.DieReference.html' title='gimli::DieReference'>DieReference</a></code></td><td><div class='docblock'><p>The DIE to use.</p>
+</div></td></tr></table><span id='variant.TLS' class='variant'><code>TLS</code></span><div class='docblock'><p>Compute the address of a thread-local variable and push it on
+the stack.</p>
+</div><span id='variant.CallFrameCFA' class='variant'><code>CallFrameCFA</code></span><div class='docblock'><p>Compute the call frame CFA and push it on the stack.</p>
+</div><span id='variant.Piece' class='variant'><code>Piece</code></span><div class='docblock'><p>Terminate a piece.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.Piece.field.size_in_bits'><code>size_in_bits:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></td><td><div class='docblock'><p>The size of this piece in bits.</p>
+</div></td></tr><tr><td id='variant.Piece.field.bit_offset'><code>bit_offset:&nbsp;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt;</code></td><td><div class='docblock'><p>The bit offset of this piece.  If <code>None</code>, then this piece
+was specified using <code>DW_OP_piece</code> and should start at the
+next byte boundary.</p>
+</div></td></tr></table><span id='variant.ImplicitValue' class='variant'><code>ImplicitValue</code></span><div class='docblock'><p>Represents <code>DW_OP_implicit_value</code>.</p>
+</div><h3 class='fields'>Fields</h3>
+
+                           <table><tr><td id='variant.ImplicitValue.field.data'><code>data:&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'input [</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></td><td><div class='docblock'><p>The implicit value to use.</p>
+</div></td></tr></table><span id='variant.StackValue' class='variant'><code>StackValue</code></span><div class='docblock'><p>Represents <code>DW_OP_stack_value</code>.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian&gt; <a class='enum' href='../gimli/enum.Operation.html' title='gimli::Operation'>Operation</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-6261' class='srclink' href='../src/gimli/src/op.rs.html#309-830' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.parse' class='method'><code>fn <a href='#method.parse' class='fnname'>parse</a>(bytes: <a class='struct' href='../gimli/struct.EndianBuf.html' title='gimli::EndianBuf'>EndianBuf</a>&lt;'input,&nbsp;Endian&gt;, bytecode: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;'input [</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, address_size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, format: <a class='enum' href='../gimli/enum.Format.html' title='gimli::Format'>Format</a>) -&gt; <a class='type' href='../gimli/type.Result.html' title='gimli::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='struct' href='../gimli/struct.EndianBuf.html' title='gimli::EndianBuf'>EndianBuf</a>&lt;'input,&nbsp;Endian&gt;, <a class='enum' href='../gimli/enum.Operation.html' title='gimli::Operation'>Operation</a>&lt;'input,&nbsp;Endian&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></h4>
+<div class='docblock'><p>Parse a single DWARF expression operation.</p>
+
+<p>This is useful when examining a DWARF expression for reasons other
+than direct evaluation.</p>
+
+<p><code>bytes</code> points to a the operation to decode.  It should point into
+the same array as <code>bytecode</code>, which should be the entire
+expression.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='enum' href='../gimli/enum.Operation.html' title='gimli::Operation'>Operation</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-5937' class='srclink' href='../src/gimli/src/op.rs.html#62' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='enum' href='../gimli/enum.Operation.html' title='gimli::Operation'>Operation</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-5957' class='srclink' href='../src/gimli/src/op.rs.html#62' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../gimli/enum.Operation.html' title='gimli::Operation'>Operation</a>&lt;'input,&nbsp;Endian&gt;) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='enum' href='../gimli/enum.Operation.html' title='gimli::Operation'>Operation</a>&lt;'input,&nbsp;Endian&gt;) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../gimli/enum.Operation.html' title='gimli::Operation'>Operation</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-6030' class='srclink' href='../src/gimli/src/op.rs.html#62' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gimli";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

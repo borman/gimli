@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `UnwindTableRow` struct in crate `gimli`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, UnwindTableRow">
+
+    <title>gimli::UnwindTableRow - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>gimli</a></p><script>window.sidebarCurrent = {name: 'UnwindTableRow', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gimli</a>::<wbr><a class='struct' href=''>UnwindTableRow</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-941' class='srclink' href='../src/gimli/src/cfi.rs.html#1057-1064' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct UnwindTableRow&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span> {
+    // some fields omitted
+}</pre><div class='docblock'><p>A row in the virtual unwind table that describes how to find the values of
+the registers in the <em>previous</em> frame for a range of PC addresses.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian&gt; <a class='struct' href='../gimli/struct.UnwindTableRow.html' title='gimli::UnwindTableRow'>UnwindTableRow</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-952' class='srclink' href='../src/gimli/src/cfi.rs.html#1079-1162' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.start_address' class='method'><code>fn <a href='#method.start_address' class='fnname'>start_address</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></h4>
+<div class='docblock'><p>Get the starting PC address that this row applies to.</p>
+</div><h4 id='method.end_address' class='method'><code>fn <a href='#method.end_address' class='fnname'>end_address</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></h4>
+<div class='docblock'><p>Get the end PC address where this row&#39;s register rules become
+unapplicable.</p>
+
+<p>In other words, this row describes how to recover the last frame&#39;s
+registers for all PCs where <code>row.start_address() &lt;= PC &lt; row.end_address()</code>. This row does NOT describe how to recover registers
+when <code>PC == row.end_address()</code>.</p>
+</div><h4 id='method.contains' class='method'><code>fn <a href='#method.contains' class='fnname'>contains</a>(&amp;self, address: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>Return <code>true</code> if the given <code>address</code> is within this row&#39;s address range,
+<code>false</code> otherwise.</p>
+</div><h4 id='method.cfa' class='method'><code>fn <a href='#method.cfa' class='fnname'>cfa</a>(&amp;self) -&gt; &amp;<a class='enum' href='../gimli/enum.CfaRule.html' title='gimli::CfaRule'>CfaRule</a>&lt;'input,&nbsp;Endian&gt;</code></h4>
+<div class='docblock'><p>Get the canonical frame address (CFA) recovery rule for this row.</p>
+</div><h4 id='method.registers' class='method'><code>fn <a href='#method.registers' class='fnname'>registers</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='enum' href='../gimli/enum.RegisterRule.html' title='gimli::RegisterRule'>RegisterRule</a>&lt;'input,&nbsp;Endian&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></h4>
+<div class='docblock'><p>Get the register recovery rules for this row.</p>
+
+<p>The rule at index <code>i</code> of the slice is the rule for register <code>i</code>. The
+slice is <strong>not</strong> guaranteed to have length equal to the number of
+registers on the target architecture. It is only as long as the largest
+numbered register for which a recovery rule is defined in this row. All
+others are implied to be <code>Undefined</code>.</p>
+
+<p>The register number mapping is architecture dependent. For example, in
+the x86-64 ABI the register number mapping is defined in Figure 3.36:</p>
+
+<blockquote>
+<p>Figure 3.36: DWARF Register Number Mapping</p>
+
+<table>
+  <tr><th>Register Name</th>                    <th>Number</th>  <th>Abbreviation</th></tr>
+  <tr><td>General Purpose Register RAX</td>     <td>0</td>       <td>%rax</td></tr>
+  <tr><td>General Purpose Register RDX</td>     <td>1</td>       <td>%rdx</td></tr>
+  <tr><td>General Purpose Register RCX</td>     <td>2</td>       <td>%rcx</td></tr>
+  <tr><td>General Purpose Register RBX</td>     <td>3</td>       <td>%rbx</td></tr>
+  <tr><td>General Purpose Register RSI</td>     <td>4</td>       <td>%rsi</td></tr>
+  <tr><td>General Purpose Register RDI</td>     <td>5</td>       <td>%rdi</td></tr>
+  <tr><td>General Purpose Register RBP</td>     <td>6</td>       <td>%rbp</td></tr>
+  <tr><td>Stack Pointer Register RSP</td>       <td>7</td>       <td>%rsp</td></tr>
+  <tr><td>Extended Integer Registers 8-15</td>  <td>8-15</td>    <td>%r8-%r15</td></tr>
+  <tr><td>Return Address RA</td>                <td>16</td>      <td></td></tr>
+  <tr><td>Vector Registers 0–7</td>             <td>17-24</td>   <td>%xmm0–%xmm7</td></tr>
+  <tr><td>Extended Vector Registers 8–15</td>   <td>25-32</td>   <td>%xmm8–%xmm15</td></tr>
+  <tr><td>Floating Point Registers 0–7</td>     <td>33-40</td>   <td>%st0–%st7</td></tr>
+  <tr><td>MMX Registers 0–7</td>                <td>41-48</td>   <td>%mm0–%mm7</td></tr>
+  <tr><td>Flag Register</td>                    <td>49</td>      <td>%rFLAGS</td></tr>
+  <tr><td>Segment Register ES</td>              <td>50</td>      <td>%es</td></tr>
+  <tr><td>Segment Register CS</td>              <td>51</td>      <td>%cs</td></tr>
+  <tr><td>Segment Register SS</td>              <td>52</td>      <td>%ss</td></tr>
+  <tr><td>Segment Register DS</td>              <td>53</td>      <td>%ds</td></tr>
+  <tr><td>Segment Register FS</td>              <td>54</td>      <td>%fs</td></tr>
+  <tr><td>Segment Register GS</td>              <td>55</td>      <td>%gs</td></tr>
+  <tr><td>Reserved</td>                         <td>56-57</td>   <td></td></tr>
+  <tr><td>FS Base address</td>                  <td>58</td>      <td>%fs.base</td></tr>
+  <tr><td>GS Base address</td>                  <td>59</td>      <td>%gs.base</td></tr>
+  <tr><td>Reserved</td>                         <td>60-61</td>   <td></td></tr>
+  <tr><td>Task Register</td>                    <td>62</td>      <td>%tr</td></tr>
+  <tr><td>LDT Register</td>                     <td>63</td>      <td>%ldtr</td></tr>
+  <tr><td>128-bit Media Control and Status</td> <td>64</td>      <td>%mxcsr</td></tr>
+  <tr><td>x87 Control Word</td>                 <td>65</td>      <td>%fcw</td></tr>
+  <tr><td>x87 Status Word</td>                  <td>66</td>      <td>%fsw</td></tr>
+  <tr><td>Upper Vector Registers 16–31</td>     <td>67-82</td>   <td>%xmm16–%xmm31</td></tr>
+  <tr><td>Reserved</td>                         <td>83-117</td>  <td></td></tr>
+  <tr><td>Vector Mask Registers 0–7</td>        <td>118-125</td> <td>%k0–%k7</td></tr>
+  <tr><td>Reserved</td>                         <td>126-129</td> <td></td></tr>
+</table>
+</blockquote>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html' title='core::cmp::Eq'>Eq</a> for <a class='struct' href='../gimli/struct.UnwindTableRow.html' title='gimli::UnwindTableRow'>UnwindTableRow</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-887' class='srclink' href='../src/gimli/src/cfi.rs.html#1056' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../gimli/struct.UnwindTableRow.html' title='gimli::UnwindTableRow'>UnwindTableRow</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-896' class='srclink' href='../src/gimli/src/cfi.rs.html#1056' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../gimli/struct.UnwindTableRow.html' title='gimli::UnwindTableRow'>UnwindTableRow</a>&lt;'input,&nbsp;Endian&gt;) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../gimli/struct.UnwindTableRow.html' title='gimli::UnwindTableRow'>UnwindTableRow</a>&lt;'input,&nbsp;Endian&gt;) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gimli/struct.UnwindTableRow.html' title='gimli::UnwindTableRow'>UnwindTableRow</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-921' class='srclink' href='../src/gimli/src/cfi.rs.html#1056' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gimli/struct.UnwindTableRow.html' title='gimli::UnwindTableRow'>UnwindTableRow</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-932' class='srclink' href='../src/gimli/src/cfi.rs.html#1056' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gimli/struct.UnwindTableRow.html' title='gimli::UnwindTableRow'>UnwindTableRow</a>&lt;'input,&nbsp;Endian&gt;</code></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'input,&nbsp;Endian&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../gimli/struct.UnwindTableRow.html' title='gimli::UnwindTableRow'>UnwindTableRow</a>&lt;'input,&nbsp;Endian&gt; <span class='where'>where Endian: <a class='trait' href='../gimli/trait.Endianity.html' title='gimli::Endianity'>Endianity</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-948' class='srclink' href='../src/gimli/src/cfi.rs.html#1066-1077' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; Self</code></h4>
+<div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gimli";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
